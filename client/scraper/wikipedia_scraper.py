@@ -16,6 +16,7 @@ def scrape(url):
     print "Title: {0}".format(title)
 
 
-
+# For testing purposes:
+# Remove later if needed
 if __name__ == "__main__":
     scrape("http://en.wikipedia.org/wiki/NP-complete")
