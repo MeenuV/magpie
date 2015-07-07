@@ -23,10 +23,13 @@ class UrlTypes(object):
     GENERAL = "general"
     WIKI = "wikipedia"
     YOUTUBE = "youtube"
+    DOCS = "google docs"
 
     special_urls = {
         WIKI: "en.wikipedia.org",
-        YOUTUBE: "youtube.com"
+        YOUTUBE: "youtube.com",
+        DRIVE: "drive.google.com",
+        DOCS: "docs.google.com"
     }
 
     @staticmethod
