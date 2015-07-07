@@ -1,8 +1,7 @@
 from flask import Flask
 from flask import request
-
+from scraper import general_metadata, wikipedia_metadata, youtube_metadata, drive_metadata
 from constants import UrlTypes
-from scraper import general_metadata, wikipedia_metadata, youtube_metadata
 import url_utils
 
 app = Flask(__name__)
@@ -30,6 +29,8 @@ def get_scraper(response):
         scraper = wikipedia_metadata.WikipediaMetadata()
     elif response.type is UrlTypes.YOUTUBE:
         scraper = youtube_metadata.YoutubeMetadata()
+    elif response.type is UrlTypes.DRIVE:
+        scraper = drive_metadata.DriveMetadata()
     else:
         scraper = general_metadata.GeneralMetadata()
     return scraper
