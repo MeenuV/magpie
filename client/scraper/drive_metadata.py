@@ -10,19 +10,23 @@ request_url = "https://www.googleapis.com/drive/v2/files/"
 class DriveMetadata(Metadata):
     prop_map = {}
 
+    def get_json_response(self, document_id):
+        response = requests.get(request_url + document_id + "?key=" + config.drive_api_key)
+        return response.json()
+
     def parse_content(self, response):
 
         m = re.search(r"([-\w]{25,})", response.url)
         document_id = m.group()
-        resp = requests.get(request_url + document_id + "?key=" + config.drive_api_key)
-        data = resp.json()
 
-        if data.get("error"):
-            return self.to_json(data)
+        response_json = self.get_json_response(document_id)
 
-        self.prop_map["title"] = data["title"]
-        self.prop_map["image"] = data["iconLink"]
-        self.prop_map["ownerNames"] = data["ownerNames"]
+        if response_json.get("error"):
+            return self.to_json(response_json)
+
+        self.prop_map["title"] = response_json["title"]
+        self.prop_map["image"] = response_json["iconLink"]
+        self.prop_map["ownerNames"] = response_json["ownerNames"]
 
         return self.to_json(self.prop_map)
 
