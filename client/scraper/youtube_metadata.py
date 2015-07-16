@@ -10,10 +10,12 @@ request_url = "http://www.youtube.com/oembed?url="
 
 class YoutubeMetadata(Metadata):
 
+    def get_json_response(self, url):
+        return requests.get(url).json()
+
     def parse_content(self, response):
         request = request_url + response.url
-        resp = requests.get(request)
-        data = resp.json()
+        data = self.get_json_response(request)
 
         self.prop_map[FieldKeyword.URL] = response.url
         self.prop_map[FieldKeyword.SANITIZED_URL] = response.sanitized_url
