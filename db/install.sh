@@ -1,9 +1,9 @@
-# !/bin/bash
+#!/bin/bash
 # Create DB script
 
 POSTGRES_ADMIN=postgres
 DBUSER=postgres
-DBNAME=postgres_db4
+DBNAME=postgres_db
 TABLENAME=magpie_cache
 
 sudo -u $POSTGRES_ADMIN createdb -O $DBUSER $DBNAME
