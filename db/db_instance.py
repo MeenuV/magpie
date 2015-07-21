@@ -1,27 +1,22 @@
 import base64
 import datetime
-from sqlalchemy import create_engine, Table, MetaData, Column, String, DateTime, exc
+from sqlalchemy import Column
+from sqlalchemy import create_engine
+from sqlalchemy import DateTime
+from sqlalchemy import exc
+from sqlalchemy import MetaData
+from sqlalchemy import Table
+from sqlalchemy import String
 from sqlalchemy.sql import select
 
-
-class MagpieDbError(Exception):
-    def __init__(self, err):
-        print "MAGPIE DB ERROR!: %s" % err
-        self.err = err
+import exceptions
+import data
 
 
-class MagpieData(object):
-    def __init__(self, url, metadata=None):
-        self.url = url
-        if(metadata is not None):
-            self.rowcount = 1
-            self.metadata = str(metadata._row[0])
-        else:
-            self.rowcount = 0
-            self.metadata = metadata
+class DbInstance(object):
 
+    db = None
 
-class DbUtils(object):
     def _establish_db_connection(self):
         # Establish connection
         connectionString = 'postgres://' + base64.b64decode(self._username) + ':' + base64.b64decode(self._password) + '@' + base64.b64decode(self._hostName) + '/' + self._dbName
@@ -31,14 +26,14 @@ class DbUtils(object):
     def __init__(self):
         credentials = []
         # Open credentials file. Should be stored as "username:password"
-        filename = 'credentials.txt'
+        filename = 'db/credentials.txt'
         try:
             with open(filename) as f:
                 for line in f:
                     line = line.split("\n", 1)[0]
                     credentials.append(line.split(':', 1))
         except EnvironmentError, err:
-            raise MagpieDbError(err)
+            raise exceptions.MagpieDbError(err)
 
         self._username = base64.b64encode(credentials[0][0])
         self._password = base64.b64encode(credentials[0][1])
@@ -48,7 +43,7 @@ class DbUtils(object):
         try:
             self._establish_db_connection()
         except exc.SQLAlchemyError, err:
-            raise MagpieDbError(err)
+            raise exceptions.MagpieDbError(err)
 
         # Columns of table
         self._columns = ['url', 'metadata', 'created_date']
@@ -70,7 +65,7 @@ class DbUtils(object):
         result = self._connection.execute(s)
 
         # Do nothing if it exists
-        if(result.rowcount == 1):
+        if result.rowcount == 1:
             return
 
         # Insert URL and Metadata into Table
@@ -78,15 +73,19 @@ class DbUtils(object):
         try:
             self._connection.execute(ins)
         except exc.SQLAlchemyError, err:
-            raise MagpieDbError(err)
+            raise exceptions.MagpieDbError(err)
 
     def get_metadata(self, request_url):
         s = select([self._mydata.c.metadata]).where(self._mydata.c.url == request_url)
         try:
             result = self._connection.execute(s)
         except exc.SQLAlchemyError, err:
-            raise MagpieDbError(err)
-        return MagpieData(request_url, result.first())
+            raise exceptions.MagpieDbError(err)
+        return data.MagpieData(request_url, result.first())
+
+    @staticmethod
+    def init_db_instance():
+        DbInstance.db = DbInstance()
 
 if __name__ == "__main__":
-        db = DbUtils()
+        db = DbInstance()

@@ -3,12 +3,10 @@ from flask import request
 
 import api_handler
 from client.constants import ResponseType
-
+import config
+from db import db_instance
 
 app = Flask(__name__)
-
-# set debug to False on non prod env
-is_dev = True
 
 
 @app.route('/')
@@ -27,4 +25,6 @@ def get_metadata():
 
 
 if __name__ == '__main__':
-    app.run(debug=is_dev)
+    if config.USE_DB:
+        db_instance.DbInstance.init_db_instance()
+    app.run(debug=config.IS_DEV)
