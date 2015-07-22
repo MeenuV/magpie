@@ -32,7 +32,7 @@ class YoutubeMetadata(Metadata):
         media_list = {}
         media_list[FieldKeyword.DATA] = [
             {
-                FieldKeyword.URL: None,
+                FieldKeyword.URL: response.request_url,
                 FieldKeyword.TYPE: MediaTypeValue.VIDEO,
                 FieldKeyword.IFRAME: data["html"]
             }]
