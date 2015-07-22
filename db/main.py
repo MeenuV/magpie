@@ -6,7 +6,6 @@ from sqlalchemy.sql import select
 
 class MagpieDbError(Exception):
     def __init__(self, err):
-        print "MAGPIE DB ERROR!: %s" % err
         self.err = err
 
 
