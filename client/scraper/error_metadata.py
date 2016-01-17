@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from flask import current_app
 
 from client import url_utils
 from client.constants import FieldKeyword
@@ -19,6 +20,7 @@ class ErrorMetadata(Metadata):
         self.prop_map[FieldKeyword.DESC] = None
 
     def fetch_site_data(self, sanitized_url, status_code):
+        logger = current_app.logger
         response = None
         if status_code != StatusCode.BAD_REQUEST:
             response = self.generic_fetch_content(sanitized_url, status_code)
@@ -26,7 +28,7 @@ class ErrorMetadata(Metadata):
         else:
             response = Response()
         status_code, error_msg = url_utils.get_error(status_code)
-        response.set_error(status_code, error_msg)
+        logger.warn("%s %d error: %s", error_msg, status_code, sanitized_url)
         return response
 
     def parse_content(self, response):

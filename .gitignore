@@ -1,5 +1,6 @@
 .idea/
 venv/
 magpievenv/
+logs/*
 *.pyc
 *.DS_Store
