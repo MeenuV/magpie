@@ -16,13 +16,13 @@ class WikipediaMetadata(Metadata):
         base_api_url = "https://en.wikipedia.org/w/api.php?"
         query = collections.OrderedDict([
             ("action", "query"),
-            ("prop", "imageinfo%7Cinfo%7Cpageimages"),
+            ("prop", "extracts%7Cimageinfo%7Cpageimages"),
             ("format", "json"),
-            ("iiprop", "url"),
-            ("inprop", "readable"),
+            ("exchars", "400"),
+            ("iiprop", "url%7Csize"),
+            ("imlimit", "1"),
             ("piprop", "thumbnail"),
             ("pithumbsize", "500"),
-            ("exintro", ""),
             ("titles", title)
         ])
         api_url = base_api_url
