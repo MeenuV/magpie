@@ -1,6 +1,7 @@
 beautifulsoup4
 coverage
 codecov
+celery
 flake8
 flask==0.10.1
 mock
