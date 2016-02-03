@@ -7,9 +7,11 @@ build:
 	./build.sh
 
 dev:
+	export IS_DEV=true
 	PYTHONPATH=. python client/api.py
 
 prod:
+	export IS_DEV=false
 	PYTHONPATH=. python client/api.py
 
 tests:
